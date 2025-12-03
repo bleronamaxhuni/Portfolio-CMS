@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <nav class="bg-red-600 text-white">
+    <nav class="bg-red-700 text-white">
         <div class="container mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
                 <a href="/" class="text-lg font-bold">{{ config('app.name', 'Laravel') }}</a>

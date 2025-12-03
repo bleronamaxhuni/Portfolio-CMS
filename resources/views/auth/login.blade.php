@@ -40,7 +40,7 @@
                 </div>
 
                 <button type="submit"
-                    class="w-full bg-red-600 text-white font-semibold py-2 rounded-lg hover:bg-red-700 transition">
+                    class="w-full bg-red-700 text-white font-semibold py-2 rounded-lg hover:bg-red-700 transition">
                     Login
                 </button>
             </form>
