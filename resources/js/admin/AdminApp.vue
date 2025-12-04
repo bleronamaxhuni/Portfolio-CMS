@@ -6,8 +6,8 @@
         <nav class="space-y-2">
           <a href="/admin/dashboard" :class="{ 'bg-red-800': isActive('/admin/dashboard') }" class="block px-4 py-3 rounded-lg hover:bg-red-800 transition font-semibold">Dashboard</a>
           <a href="/admin/projects" :class="{ 'bg-red-800': isActive('/admin/projects') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Projects</a>
-          <a href="/admin/skills" :class="{ 'bg-red-800': isActive('#skills') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Skills</a>
-          <a href="#experiences" :class="{ 'bg-red-800': isActive('#experiences') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Experiences</a>
+          <a href="/admin/skills" :class="{ 'bg-red-800': isActive('/admin/skills') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Skills</a>
+          <a href="/admin/experiences" :class="{ 'bg-red-800': isActive('/admin/experiences') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Experiences</a>
           <a href="#about-me" :class="{ 'bg-red-800': isActive('#about-me') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">About Me</a>
           <a href="#contact" :class="{ 'bg-red-800': isActive('#contact') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Contact Me</a>
         </nav>
@@ -28,9 +28,10 @@
 import AdminDashboard from './views/AdminDashboard.vue'
 import AdminProjects from './views/AdminProjects.vue'
 import AdminSkills from './views/AdminSkills.vue'
+import AdminExperiences from './views/AdminExperiences.vue'
 
 export default {
-  components: { AdminDashboard, AdminProjects, AdminSkills },
+  components: { AdminDashboard, AdminProjects, AdminSkills , AdminExperiences },
   computed: {
     currentPath() { 
       return window.location.pathname
@@ -38,6 +39,7 @@ export default {
     currentComponent() {
       if (this.currentPath.includes('/admin/projects')) return 'AdminProjects'
       if (this.currentPath.includes('/admin/skills')) return 'AdminSkills'
+      if (this.currentPath.includes('/admin/experiences')) return 'AdminExperiences'
       return 'AdminDashboard'
     }
   },
