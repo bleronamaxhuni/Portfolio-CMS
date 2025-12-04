@@ -1,5 +1,6 @@
 <?php 
 
+use App\Http\Controllers\Admin\AboutMeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ExperienceController;
@@ -11,4 +12,5 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('/admin/projects', ProjectController::class);
     Route::resource('/admin/skills', SkillController::class);
     Route::resource('/admin/experiences', ExperienceController::class);
+    Route::resource('/admin/about-me', AboutMeController::class);
 });

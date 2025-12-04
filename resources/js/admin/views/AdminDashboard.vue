@@ -6,7 +6,6 @@
       <h1 class="text-3xl font-bold text-gray-800 mb-2">Welcome to Admin Dashboard</h1>
       <p class="text-gray-600">Manage your portfolio content from here</p>
     </div>
-
     <!-- Dashboard Stats -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <!-- Projects Card -->
@@ -14,7 +13,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-600 text-sm">Projects</p>
-            <p class="text-3xl font-bold text-red-600">0</p>
+            <p class="text-3xl font-bold text-red-600">{{ stats.projects}}</p>
           </div>
           <svg class="w-12 h-12 text-red-200" fill="currentColor" viewBox="0 0 20 20">
             <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4z"></path>
@@ -28,7 +27,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-600 text-sm">Skills</p>
-            <p class="text-3xl font-bold text-red-600">0</p>
+            <p class="text-3xl font-bold text-red-600">{{ stats.skills }}</p>
           </div>
           <svg class="w-12 h-12 text-red-200" fill="currentColor" viewBox="0 0 20 20">
             <path d="M13 7H7v6h6V7z"></path>
@@ -42,7 +41,7 @@
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-600 text-sm">Experiences</p>
-            <p class="text-3xl font-bold text-red-600">0</p>
+            <p class="text-3xl font-bold text-red-600">{{ stats.experiences }}</p>
           </div>
           <svg class="w-12 h-12 text-red-200" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
@@ -65,7 +64,7 @@
       </div>
     </div>
 
-    <!-- Quick Actions -->
+    <!-- Quick Actions
     <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-red-600">
       <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -76,15 +75,46 @@
         <button class="px-4 py-3 bg-red-700 text-white rounded-lg hover:bg-red-700 transition font-semibold">View Messages</button>
         <button class="px-4 py-3 bg-red-700 text-white rounded-lg hover:bg-red-700 transition font-semibold">Settings</button>
       </div>
-    </div>
+    </div> -->
+    
   </div>
 </template>
 
 <script>
 export default {
-  name: 'AdminDashboard'
-}
+  name: 'AdminDashboard',
+  data() {
+    return {
+      stats: {
+        projects: 0,
+        skills: 0,
+        experiences: 0,
+        messages: 0,
+        about: 0
+      }
+    };
+  },
+  methods: {
+    async fetchStats() {
+      try {
+        const res = await fetch("/admin/dashboard", {
+          headers: { Accept: "application/json" }
+        });
+
+        if (res.ok) {
+          this.stats = await res.json();
+        }
+      } catch (e) {
+        console.error("Dashboard fetch error:", e);
+      }
+    }
+  },
+  mounted() {
+    this.fetchStats();
+  }
+};
 </script>
+
 
 <style scoped>
 </style>
