@@ -6,7 +6,7 @@
         <nav class="space-y-2">
           <a href="/admin/dashboard" :class="{ 'bg-red-800': isActive('/admin/dashboard') }" class="block px-4 py-3 rounded-lg hover:bg-red-800 transition font-semibold">Dashboard</a>
           <a href="/admin/projects" :class="{ 'bg-red-800': isActive('/admin/projects') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Projects</a>
-          <a href="#skills" :class="{ 'bg-red-800': isActive('#skills') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Skills</a>
+          <a href="/admin/skills" :class="{ 'bg-red-800': isActive('#skills') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Skills</a>
           <a href="#experiences" :class="{ 'bg-red-800': isActive('#experiences') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Experiences</a>
           <a href="#about-me" :class="{ 'bg-red-800': isActive('#about-me') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">About Me</a>
           <a href="#contact" :class="{ 'bg-red-800': isActive('#contact') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Contact Me</a>
@@ -27,15 +27,17 @@
 <script>
 import AdminDashboard from './views/AdminDashboard.vue'
 import AdminProjects from './views/AdminProjects.vue'
+import AdminSkills from './views/AdminSkills.vue'
 
 export default {
-  components: { AdminDashboard, AdminProjects },
+  components: { AdminDashboard, AdminProjects, AdminSkills },
   computed: {
-    currentPath() {
+    currentPath() { 
       return window.location.pathname
     },
     currentComponent() {
       if (this.currentPath.includes('/admin/projects')) return 'AdminProjects'
+      if (this.currentPath.includes('/admin/skills')) return 'AdminSkills'
       return 'AdminDashboard'
     }
   },
