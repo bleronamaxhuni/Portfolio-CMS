@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <!-- Header -->
@@ -68,12 +69,12 @@
     <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-red-600">
       <h2 class="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <button class="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold">+ Add Project</button>
-        <button class="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold">+ Add Skill</button>
-        <button class="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold">+ Add Experience</button>
-        <button class="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold">+ Update About Me</button>
-        <button class="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold">View Messages</button>
-        <button class="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-semibold">Settings</button>
+        <button class="px-4 py-3 bg-red-700 text-white rounded-lg hover:bg-red-700 transition font-semibold">+ Add Project</button>
+        <button class="px-4 py-3 bg-red-700 text-white rounded-lg hover:bg-red-700 transition font-semibold">+ Add Skill</button>
+        <button class="px-4 py-3 bg-red-700 text-white rounded-lg hover:bg-red-700 transition font-semibold">+ Add Experience</button>
+        <button class="px-4 py-3 bg-red-700 text-white rounded-lg hover:bg-red-700 transition font-semibold">+ Update About Me</button>
+        <button class="px-4 py-3 bg-red-700 text-white rounded-lg hover:bg-red-700 transition font-semibold">View Messages</button>
+        <button class="px-4 py-3 bg-red-700 text-white rounded-lg hover:bg-red-700 transition font-semibold">Settings</button>
       </div>
     </div>
   </div>
