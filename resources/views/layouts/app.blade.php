@@ -17,13 +17,13 @@
                 <div class="space-x-4">
                     @auth
                         <span>{{ auth()->user()->name }}</span>
-                        <form action="{{ route('auth.logout') }}" method="POST" class="inline">
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
                             <button type="submit" class="hover:underline">Logout</button>
                         </form>
                     @else
-                        <a href="{{ route('auth.login') }}" class="hover:underline">Login</a>
-                        <a href="{{ route('auth.register') }}" class="hover:underline">Register</a>
+                        <a href="{{ route('login') }}" class="hover:underline">Login</a>
+                        <a href="{{ route('register') }}" class="hover:underline">Register</a>
                     @endauth
                 </div>
             </div>
