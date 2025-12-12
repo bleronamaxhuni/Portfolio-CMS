@@ -11,7 +11,8 @@ class SkillController extends Controller
     public function index()
     {
         if (request()->wantsJson()) {
-            return response()->json(Skill::all());
+            $skills = Skill::paginate(5);
+            return response()->json($skills);
         }
         return view('admin.skills');
     }
