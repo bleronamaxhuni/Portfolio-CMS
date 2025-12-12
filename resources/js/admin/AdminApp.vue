@@ -13,6 +13,10 @@
         </nav>
       </div>
 
+      <div class="absolute bottom-6 left-6 right-6 mb-16">
+        <a href="/" class="block px-4 py-3 rounded-lg hover:bg-red-800 transition font-semibold">Portfolio</a>
+      </div>
+
       <div class="absolute bottom-6 left-6 right-6">
         <button @click="logout" class="w-full px-4 py-2 bg-white text-red-600 font-semibold rounded-lg hover:bg-gray-100 transition">Logout</button>
       </div>

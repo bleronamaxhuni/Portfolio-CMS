@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="skill in skills" :key="skill.id">
+        <tr v-for="skill in skills.data" :key="skill.id">
           <td class="px-4 py-2 border-b border-gray-200">{{ skill.name }}</td>
           <td class="px-4 py-2 border-b border-gray-200">
             {{ skill.proficiency_level }}
@@ -41,6 +41,21 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- Pagination -->
+    <div class="flex justify-center gap-4 mb-4">
+      <button @click="fetchSkills(skills.prev_page_url)" 
+              :disabled="!skills.prev_page_url"
+              class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 disabled:opacity-50 font-bold">
+        &lt;
+      </button>
+      <button @click="fetchSkills(skills.next_page_url)" 
+              :disabled="!skills.next_page_url"
+              class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 disabled:opacity-50 font-bold">
+        &gt;
+      </button>
+    </div>
+
     <button
       @click="openModal"
       class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
@@ -160,6 +175,8 @@
 </template>
 
 <script>
+import draggable
+ from 'vuedraggable';
 export default {
   name: "AdminSkills",
   data() {
@@ -167,7 +184,12 @@ export default {
       isModalOpen: false,
       isEditModalOpen: false,
       editingSkillId: null,
-      skills: [],
+      skills: {
+        data: [],
+        current_page: 1,
+        next_page_url: null,
+        prev_page_url: null,
+      },
       newSkill: {
         name: "",
         proficiency_level: "",
@@ -176,9 +198,9 @@ export default {
     };
   },
   methods: {
-    async fetchSkills() {
+    async fetchSkills(url="/admin/skills") {
       try {
-        const response = await fetch("/admin/skills", {
+        const response = await fetch(url, {
           headers: {
             Accept: "application/json",
           },
@@ -221,7 +243,7 @@ export default {
           throw new Error("Network response was not ok");
         }
         const createdSkill = await response.json();
-        this.skills.push(createdSkill);
+        this.skills.data.unshift(createdSkill);
         this.closeModal();
         this.resetForm();
       } catch (error) {
@@ -256,9 +278,9 @@ export default {
           throw new Error("Network response was not ok");
         }
         const updatedSkill = await response.json();
-        const index = this.skills.findIndex((s) => s.id === updatedSkill.id);
+        const index = this.skills.data.findIndex((s) => s.id === updatedSkill.id);
         if (index !== -1) {
-          this.skills.splice(index, 1, updatedSkill);
+          this.skills.data.splice(index, 1, updatedSkill);
         }
         this.closeEditModal();
       } catch (error) {
