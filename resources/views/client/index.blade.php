@@ -58,7 +58,7 @@
             <div class="flex-1 flex justify-center">
                 <div class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden bg-white shadow-2xl flex items-center justify-center transform transition-transform hover:scale-105 duration-700 ease-in-out">
                     @if(!empty($about->profile_image))
-                        <img src="{{ asset('storage/' . $about->profile_image) }}" 
+                        <img src="{{ Storage::url($about->profile_image) }}" 
                             alt="Profile photo"
                             class="w-full h-full object-cover">
                     @else
