@@ -29,33 +29,33 @@ This project was built as a personal portfolio CMS to demonstrate full-stack dev
 ### Admin Panel
 
 #### Dashboard
-![Dashboard](storage/app/public/sc_readme/Dashboard.png)
+![Dashboard](docs/images/Dashboard.png)
 
 #### Login/Register
-![Login/Register](storage/app/public/sc_readme/Login:Register.png)
+![Login/Register](docs/images/Login:Register.png)
 
 #### Projects Management
-![Projects](storage/app/public/sc_readme/Projects.png)
+![Projects](docs/images/Projects.png)
 
 #### Skills Management
-![Skills](storage/app/public/sc_readme/Skills.png)
+![Skills](docs/images/Skills.png)
 
 #### Experiences Management
-![Experiences](storage/app/public/sc_readme/Experiences.png)
+![Experiences](docs/images/Experiences.png)
 
 #### About Me Management
-![About Me](storage/app/public/sc_readme/AboutMe.png)
+![About Me](docs/images/AboutMe.png)
 
 #### Contact Form Messages
-![Contact Form](storage/app/public/sc_readme/ContactForm.png)
+![Contact Form](docs/images/ContactForm.png)
 
 ### Client Side
 
 #### Projects View
-![Projects Client View](storage/app/public/sc_readme/Projects-ClientView.png)
+![Projects Client View](docs/images/Projects-ClientView.png)
 
 #### Experiences View
-![Experiences Client View](storage/app/public/sc_readme/Experiences-ClientView.png)
+![Experiences Client View](docs/images/Experiences-ClientView.png)
 
 #### About Me View
-![About Me Client View](storage/app/public/sc_readme/AboutMe-ClientView.png)
+![About Me Client View](docs/images/AboutMe-ClientView.png)
