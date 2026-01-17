@@ -23,3 +23,39 @@ This is a CMS-based portfolio application built with **Laravel**, **Vue.js**, **
 
 ## Purpose
 This project was built as a personal portfolio CMS to demonstrate full-stack development skills, including backend logic, frontend interactivity, and database-driven content management.
+
+## Screenshots
+
+### Admin Panel
+
+#### Dashboard
+![Dashboard](storage/app/public/sc_readme/Dashboard.png)
+
+#### Login/Register
+![Login/Register](storage/app/public/sc_readme/Login:Register.png)
+
+#### Projects Management
+![Projects](storage/app/public/sc_readme/Projects.png)
+
+#### Skills Management
+![Skills](storage/app/public/sc_readme/Skills.png)
+
+#### Experiences Management
+![Experiences](storage/app/public/sc_readme/Experiences.png)
+
+#### About Me Management
+![About Me](storage/app/public/sc_readme/AboutMe.png)
+
+#### Contact Form Messages
+![Contact Form](storage/app/public/sc_readme/ContactForm.png)
+
+### Client Side
+
+#### Projects View
+![Projects Client View](storage/app/public/sc_readme/Projects-ClientView.png)
+
+#### Experiences View
+![Experiences Client View](storage/app/public/sc_readme/Experiences-ClientView.png)
+
+#### About Me View
+![About Me Client View](storage/app/public/sc_readme/AboutMe-ClientView.png)
