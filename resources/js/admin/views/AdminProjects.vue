@@ -36,10 +36,12 @@
                 <span v-else-if="project.status === 'paused'" class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold">Paused</span>
               </td>
               <td class="px-6 py-4">
-                <a :href="project.repository_link" target="_blank" v-if="project.repository_link" class="text-sm text-blue-600 mr-3">Repo</a>
-                <a :href="project.link" target="_blank" v-if="project.link" class="text-sm text-green-600 mr-3">Live</a>
-                <button @click="openEditModal(project)" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">Edit</button>
-                <button @click="deleteProject(project.id)" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700">Delete</button>
+                <div class="flex items-center gap-2 whitespace-nowrap">
+                  <a :href="project.repository_link" target="_blank" v-if="project.repository_link" class="text-xs text-blue-600 hover:underline">Repo</a>
+                  <a :href="project.link" target="_blank" v-if="project.link" class="text-xs text-green-600 hover:underline">Live</a>
+                  <button @click="openEditModal(project)" class="px-2 py-0.5 text-xs bg-blue-500 text-white rounded hover:bg-blue-600">Edit</button>
+                  <button @click="deleteProject(project.id)" class="px-2 py-0.5 text-xs bg-red-500 text-white rounded hover:bg-red-700">Delete</button>
+                </div>
               </td>
             </tr>
           </tbody>
