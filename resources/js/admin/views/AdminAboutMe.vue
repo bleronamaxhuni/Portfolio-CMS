@@ -157,7 +157,20 @@ export default {
       const file = event.target.files[0];
       this.aboutMe.profile_image_file = file;
 
+      if (!file) return;
+
       this.aboutMe.profile_image = URL.createObjectURL(file);
+
+      this.aboutMe.profile_image_mime = file.type || "";
+      this.aboutMe.profile_image_data = "";
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = String(reader.result || "");
+        const base64 = result.includes(",") ? result.split(",")[1] : result;
+        this.aboutMe.profile_image_data = base64;
+      };
+      reader.readAsDataURL(file);
     },
     triggerFileUpload() {
       this.$refs.fileInput.click();
