@@ -1,6 +1,10 @@
 {
+  "__plugin-vue_export-helper-BQ5-8BMs.js": {
+    "file": "assets/_plugin-vue_export-helper-BQ5-8BMs.js",
+    "name": "_plugin-vue_export-helper"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-CMFxycsE.css",
+    "file": "assets/app-CSrgd67G.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -8,10 +12,22 @@
       "app.css"
     ]
   },
+  "resources/js/admin/admin.js": {
+    "file": "assets/admin-B2IdBaSf.js",
+    "name": "admin",
+    "src": "resources/js/admin/admin.js",
+    "isEntry": true,
+    "imports": [
+      "__plugin-vue_export-helper-BQ5-8BMs.js"
+    ]
+  },
   "resources/js/app.js": {
-    "file": "assets/app-C4UFzuQq.js",
+    "file": "assets/app-BSBy97CF.js",
     "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "__plugin-vue_export-helper-BQ5-8BMs.js"
+    ]
   }
 }
