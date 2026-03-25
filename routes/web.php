@@ -4,8 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Client\IndexController;
+use App\Http\Controllers\Client\ContactController;
 
 Route::get('/', [IndexController::class,'index'])->name('home');
+
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

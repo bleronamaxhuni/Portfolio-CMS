@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
     @vite('resources/css/app.css')
 </head>
+
 <body class="bg-[#f0f4ff] text-gray-800 font-sans">
 
     <!-- HEADER -->
@@ -13,10 +15,14 @@
         <nav class="max-w-6xl mx-auto flex justify-between items-center p-4">
             <div class="text-xl font-bold">Blerona</div>
             <ul class="flex gap-6">
-                <li><a href="#experiences" class="text-gray-700 hover:text-blue-600 transition-colors duration-300">Experiences</a></li>
-                <li><a href="#skills" class="text-gray-700 hover:text-blue-600 transition-colors duration-300">Skills</a></li>
-                <li><a href="#projects" class="text-gray-700 hover:text-blue-600 transition-colors duration-300">Projects</a></li>
-                <li><a href="#contact" class="text-gray-700 hover:text-blue-600 transition-colors duration-300">Contact</a></li>
+                <li><a href="#experiences"
+                        class="text-gray-700 hover:text-blue-600 transition-colors duration-300">Experiences</a></li>
+                <li><a href="#skills"
+                        class="text-gray-700 hover:text-blue-600 transition-colors duration-300">Skills</a></li>
+                <li><a href="#projects"
+                        class="text-gray-700 hover:text-blue-600 transition-colors duration-300">Projects</a></li>
+                <li><a href="#contact"
+                        class="text-gray-700 hover:text-blue-600 transition-colors duration-300">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -27,7 +33,8 @@
 
             <!-- LEFT TEXT -->
             <div class="flex-1 text-center md:text-left">
-                <h2 class="text-3xl md:text-4xl font-semibold text-blue-700 flex items-center justify-center md:justify-start gap-2">
+                <h2
+                    class="text-3xl md:text-4xl font-semibold text-blue-700 flex items-center justify-center md:justify-start gap-2">
                     Hi, I’m {{ $about->name ?? 'Blerona' }}
                     <span class="animate-wave inline-block">👋</span>
                 </h2>
@@ -43,23 +50,37 @@
                 <!-- Buttons -->
                 <div class="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
                     <a href="#contact"
-                    class="bg-blue-600 text-white px-8 py-3 rounded-xl font-medium shadow-lg hover:bg-blue-700 transition-all duration-300 hover:shadow-xl">
+                        class="bg-blue-600 text-white px-8 py-3 rounded-xl font-medium shadow-lg hover:bg-blue-700 transition-all duration-300 hover:shadow-xl">
                         Get in touch
                     </a>
 
-                    <a href="{{ asset('storage/Blerona_CV.pdf') }}" download
-                    class="bg-gray-200 text-gray-800 px-8 py-3 rounded-xl font-medium shadow-lg hover:bg-gray-300 transition-all duration-300 hover:shadow-xl">
-                        Download Resume
-                    </a>
+                    @if(!empty($about->resume_link))
+                        @php
+                            $resumeUrl = $about->resume_link;
+                            $isStorageUrl = is_string($resumeUrl) && (str_contains($resumeUrl, 'storage/') || str_contains($resumeUrl, '/storage/'));
+                        @endphp
+
+                        @if($isStorageUrl)
+                            <a href="{{ $resumeUrl }}" download
+                               class="bg-gray-200 text-gray-800 px-8 py-3 rounded-xl font-medium shadow-lg hover:bg-gray-300 transition-all duration-300 hover:shadow-xl">
+                                Download Resume
+                            </a>
+                        @else
+                            <a href="{{ $resumeUrl }}" target="_blank" rel="noopener noreferrer"
+                               class="bg-gray-200 text-gray-800 px-8 py-3 rounded-xl font-medium shadow-lg hover:bg-gray-300 transition-all duration-300 hover:shadow-xl">
+                                Download Resume
+                            </a>
+                        @endif
+                    @endif
                 </div>
             </div>
 
             <!-- RIGHT IMAGE -->
             <div class="flex-1 flex justify-center">
-                <div class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden bg-white shadow-2xl flex items-center justify-center transform transition-transform hover:scale-105 duration-700 ease-in-out">
-                    @if(!empty($about->profile_image))
-                        <img src="{{ Storage::url($about->profile_image) }}" 
-                            alt="Profile photo"
+                <div
+                    class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden bg-white shadow-2xl flex items-center justify-center transform transition-transform hover:scale-105 duration-700 ease-in-out">
+                    @if (!empty($about->profile_image))
+                        <img src="{{ Storage::url($about->profile_image) }}" alt="Profile photo"
                             class="w-full h-full object-cover">
                     @else
                         <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
@@ -76,8 +97,9 @@
     <section id="experiences" class="py-16 bg-gray-50">
         <h2 class="text-3xl font-semibold mb-10 text-center text-gray-900">Experiences</h2>
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
-            @foreach($experiences as $exp)
-                <div class="p-6 bg-white rounded-2xl shadow-md transform hover:-translate-y-2 hover:shadow-xl transition-all duration-700 ease-in-out">
+            @foreach ($experiences as $exp)
+                <div
+                    class="p-6 bg-white rounded-2xl shadow-md transform hover:-translate-y-2 hover:shadow-xl transition-all duration-700 ease-in-out">
                     <h3 class="font-bold text-xl mb-1">{{ $exp->title }}</h3>
                     <p class="text-blue-600 font-medium">{{ $exp->company }}</p>
                     <p class="mt-3 text-gray-600">{{ $exp->description }}</p>
@@ -90,10 +112,20 @@
     <section id="skills" class="py-16">
         <h2 class="text-3xl font-semibold mb-10 text-center text-gray-900">Skills</h2>
         <div class="max-w-5xl mx-auto flex flex-wrap justify-center gap-4">
-            @foreach($skills as $skill)
-                <span class="px-5 py-2 bg-blue-100 text-blue-800 rounded-full font-medium shadow-sm transform hover:scale-110 hover:bg-blue-200 transition-all duration-500 ease-in-out">
-                    {{ $skill->name }}
-                </span>
+            @foreach ($skills as $skill)
+                <div class="relative group">
+                    <span
+                        class="px-5 py-2 bg-blue-100 text-blue-800 rounded-full font-medium shadow-sm transform hover:scale-110 hover:bg-blue-200 transition-all duration-500 ease-in-out">
+                        {{ $skill->name }}
+                    </span>
+                    @if(!empty($skill->proficiency_level))
+                        <div class="hidden group-hover:block absolute left-1/2 top-full transform -translate-x-1/2 mt-3 z-10 pointer-events-none">
+                            <div class="px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg whitespace-nowrap">
+                                Proficiency: {{ $skill->proficiency_level }}
+                            </div>
+                        </div>
+                    @endif
+                </div>
             @endforeach
         </div>
     </section>
@@ -102,12 +134,27 @@
     <section id="projects" class="py-16 bg-gray-50">
         <h2 class="text-3xl font-semibold mb-10 text-center text-gray-900">Projects</h2>
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach($projects as $project)
-                <div class="p-6 bg-white rounded-2xl shadow-md transform hover:-translate-y-2 hover:shadow-xl transition-all duration-700 ease-in-out">
+            @foreach ($projects as $project)
+                <div
+                    class="p-6 bg-white rounded-2xl shadow-md transform hover:-translate-y-2 hover:shadow-xl transition-all duration-700 ease-in-out">
                     <h3 class="font-bold text-xl">{{ $project->title }}</h3>
                     <p class="mt-3 text-gray-700">{{ $project->description }}</p>
-                    @if($project->link)
-                        <a href="{{ $project->link }}" class="text-blue-600 mt-4 inline-block hover:underline">View Project</a>
+                    @if ($project->repository_link || $project->link)
+                        <div class="mt-4 flex flex-wrap gap-3">
+                            @if ($project->repository_link)
+                                <a href="{{ $project->repository_link }}" target="_blank" rel="noopener noreferrer"
+                                   class="text-blue-600 inline-block hover:underline">
+                                    View Github Repo
+                                </a>
+                            @endif
+
+                            @if ($project->link)
+                                <a href="{{ $project->link }}" target="_blank" rel="noopener noreferrer"
+                                   class="text-blue-600 inline-block hover:underline">
+                                    View Project
+                                </a>
+                            @endif
+                        </div>
                     @endif
                 </div>
             @endforeach
@@ -117,12 +164,26 @@
     <!-- CONTACT -->
     <section id="contact" class="py-16">
         <h2 class="text-3xl font-semibold mb-10 text-center text-gray-900">Contact Me</h2>
-        <form action="" method="POST" class="max-w-2xl mx-auto flex flex-col gap-4">
+        <form action="{{ route('contact.submit') }}" method="POST" class="max-w-2xl mx-auto flex flex-col gap-4">
             @csrf
-            <input type="text" name="name" placeholder="Your Name" class="p-4 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-200">
-            <input type="email" name="email" placeholder="Your Email" class="p-4 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-200">
-            <textarea name="message" rows="5" placeholder="Your Message" class="p-4 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-200"></textarea>
-            <button type="submit" class="bg-blue-600 text-white py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300">Send</button>
+            @if(session('success'))
+                <div class="bg-green-100 text-green-800 px-4 py-3 rounded-lg text-sm">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if($errors->any())
+                <div class="bg-red-100 text-red-800 px-4 py-3 rounded-lg text-sm">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+            <input type="text" name="name" placeholder="Your Name"
+                class="p-4 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-200">
+            <input type="email" name="email" placeholder="Your Email"
+                class="p-4 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-200">
+            <textarea name="message" rows="5" placeholder="Your Message"
+                class="p-4 border rounded-xl shadow-sm focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-200"></textarea>
+            <button type="submit"
+                class="bg-blue-600 text-white py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300">Send</button>
         </form>
     </section>
 
@@ -132,19 +193,42 @@
             transform-origin: 70% 70%;
             animation: wave 2s infinite;
         }
+
         @keyframes wave {
-            0% { transform: rotate(0deg); }
-            15% { transform: rotate(14deg); }
-            30% { transform: rotate(-8deg); }
-            45% { transform: rotate(14deg); }
-            60% { transform: rotate(-4deg); }
-            75% { transform: rotate(10deg); }
-            100% { transform: rotate(0deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            15% {
+                transform: rotate(14deg);
+            }
+
+            30% {
+                transform: rotate(-8deg);
+            }
+
+            45% {
+                transform: rotate(14deg);
+            }
+
+            60% {
+                transform: rotate(-4deg);
+            }
+
+            75% {
+                transform: rotate(10deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
         }
+
         html {
             scroll-behavior: smooth;
         }
     </style>
 
 </body>
+
 </html>
