@@ -25,7 +25,7 @@ class ContactMessageMail extends Mailable
             ->with([
                 'name' => $this->name,
                 'email' => $this->email,
-                'message' => $this->message,
+                'user_message' => $this->message,
             ]);
     }
 }

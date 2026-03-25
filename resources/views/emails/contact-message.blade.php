@@ -16,7 +16,7 @@
     </p>
     <p style="margin: 0;">
         <strong>Message:</strong><br>
-        {{ $message }}
+        {{ $user_message }}
     </p>
 </body>
 </html>
