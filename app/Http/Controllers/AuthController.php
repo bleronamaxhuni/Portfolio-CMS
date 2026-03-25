@@ -30,7 +30,9 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/admin/dashboard');
+            $user = $request->user();
+            $target = ($user && $user->is_admin) ? '/admin/dashboard' : '/';
+            return redirect()->intended($target);
         }
 
         throw ValidationException::withMessages([
@@ -57,15 +59,18 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
+        $isFirstAdmin = !User::where('is_admin', true)->exists();
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'is_admin' => $isFirstAdmin,
         ]);
 
         Auth::login($user);
 
-        return redirect('/admin/dashboard');
+        return redirect($user->is_admin ? '/admin/dashboard' : '/');
     }
 
     /**

@@ -16,8 +16,8 @@ class AuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (!Auth::check()) {
-            return redirect('/login'); 
+        if (!Auth::check() || ! (bool) Auth::user()->is_admin) {
+            return redirect('/login');
         }
 
         return $next($request);
