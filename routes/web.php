@@ -8,7 +8,6 @@ use App\Http\Controllers\Client\ContactController;
 
 Route::get('/', [IndexController::class,'index'])->name('home');
 
-Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -17,17 +16,8 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-
-Route::get('/storage/about/{path}', function (string $path) {
-    $path = ltrim($path, '/');
-    $diskPath = 'about/' . $path;
-
-    abort_unless(Storage::disk('public')->exists($diskPath), 404);
-
-    
-    $absolutePath = Storage::disk('public')->path($diskPath);
-
-    abort_unless(is_file($absolutePath), 404);
-
-    return response()->file($absolutePath);
-})->where('path', '.*');
+// Contact Routes
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+Route::get('/contact', function () {
+    return redirect()->route('home') . '#contact';
+})->name('contact.page');
