@@ -10,11 +10,11 @@
           @click="triggerFileUpload"
           class="h-32 w-32 rounded-full border-2 border-dashed border-gray-400 flex items-center justify-center cursor-pointer hover:bg-gray-100 relative"
         >
-          <span v-if="!aboutMe.profile_image && !aboutMe.profile_image_data" class="text-gray-500 text-4xl">+</span>
+          <span v-if="!aboutMe.profile_image_preview_url && !aboutMe.profile_image_data" class="text-gray-500 text-4xl">+</span>
 
           <img
             v-else
-            :src="imageSrc(aboutMe.profile_image, aboutMe.profile_image_data, aboutMe.profile_image_mime)"
+            :src="imageSrc(aboutMe.profile_image_data, aboutMe.profile_image_mime, aboutMe.profile_image_preview_url)"
             class="h-32 w-32 rounded-full object-cover"
           />
         </div>
@@ -68,33 +68,20 @@ export default {
         resume_link: "",
         profile_image_data: "",
         profile_image_mime: "",
+        // Used only for instant preview after selecting a file.
+        profile_image_preview_url: "",
       },
     };
   },
   methods: {
-    imageSrc(profileImage, profileImageData, profileImageMime) {
-      // Preferred: DB-stored base64 (no dependency on filesystem storage).
+    imageSrc(profileImageData, profileImageMime, previewUrl) {
+      // Preferred: DB-stored base64.
       if (profileImageData && profileImageMime) {
         return `data:${profileImageMime};base64,${profileImageData}`;
       }
 
-      if (!profileImage) return "";
-
-      // When the user selects a file we use an object URL.
-      if (String(profileImage).startsWith("blob")) return profileImage;
-
-      // If backend/DB already stored a full URL, don't prefix anything.
-      if (
-        String(profileImage).startsWith("http://") ||
-        String(profileImage).startsWith("https://")
-      ) {
-        return profileImage;
-      }
-
-      if (String(profileImage).startsWith("/storage/")) return profileImage;
-      if (String(profileImage).startsWith("storage/")) return "/" + profileImage;
-
-      return "/storage/" + profileImage;
+      // Fallback: object URL for immediate preview.
+      return previewUrl || "";
     },
 
     async fetchAboutMe() {
@@ -159,7 +146,7 @@ export default {
 
       if (!file) return;
 
-      this.aboutMe.profile_image = URL.createObjectURL(file);
+      this.aboutMe.profile_image_preview_url = URL.createObjectURL(file);
 
       this.aboutMe.profile_image_mime = file.type || "";
       this.aboutMe.profile_image_data = "";
