@@ -26,7 +26,10 @@ class AboutMeController extends Controller
         ]);
 
         if ($request->hasFile('profile_image')) {
-            $validated['profile_image'] = $request->file('profile_image')->store('about', 'public');
+            $file = $request->file('profile_image');
+            $validated['profile_image_data'] = base64_encode(file_get_contents($file->getRealPath()));
+            $validated['profile_image_mime'] = $file->getMimeType();
+            $validated['profile_image'] = null;
         }
 
         $created = AboutMe::create($validated);
@@ -47,15 +50,17 @@ class AboutMeController extends Controller
         ]);
 
         if ($request->hasFile('profile_image')) {
-            $data['profile_image'] = $request->file('profile_image')->store('about', 'public');
+            $file = $request->file('profile_image');
+            $data['profile_image_data'] = base64_encode(file_get_contents($file->getRealPath()));
+            $data['profile_image_mime'] = $file->getMimeType();
+            $data['profile_image'] = null;
         }
 
         $aboutMe->update($data);
 
         return $request->wantsJson()
-        ? response()->json($aboutMe, 200)
-        : redirect()->route('admin.about-me.index')->with('success', 'Updated.');
-    
+            ? response()->json($aboutMe, 200)
+            : redirect()->route('admin.about-me.index')->with('success', 'Updated.');
     }
 
     public function destroy($id)

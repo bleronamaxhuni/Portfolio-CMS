@@ -11,6 +11,8 @@ class AboutMe extends Model
     protected $fillable = [
         'bio',
         'profile_image',
+        'profile_image_data',
+        'profile_image_mime',
         'resume_link',
     ];
 }

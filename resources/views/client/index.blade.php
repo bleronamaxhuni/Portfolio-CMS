@@ -54,23 +54,11 @@
                         Get in touch
                     </a>
 
-                    @if(!empty($about->resume_link))
-                        @php
-                            $resumeUrl = $about->resume_link;
-                            $isStorageUrl = is_string($resumeUrl) && (str_contains($resumeUrl, 'storage/') || str_contains($resumeUrl, '/storage/'));
-                        @endphp
-
-                        @if($isStorageUrl)
-                            <a href="{{ $resumeUrl }}" download
-                               class="bg-gray-200 text-gray-800 px-8 py-3 rounded-xl font-medium shadow-lg hover:bg-gray-300 transition-all duration-300 hover:shadow-xl">
-                                Download Resume
-                            </a>
-                        @else
-                            <a href="{{ $resumeUrl }}" target="_blank" rel="noopener noreferrer"
-                               class="bg-gray-200 text-gray-800 px-8 py-3 rounded-xl font-medium shadow-lg hover:bg-gray-300 transition-all duration-300 hover:shadow-xl">
-                                Download Resume
-                            </a>
-                        @endif
+                    @if (!empty($about->resume_link))
+                        <a href="{{ $about->resume_link }}" target="_blank" rel="noopener noreferrer"
+                                class="bg-gray-200 text-gray-800 px-8 py-3 rounded-xl font-medium shadow-lg hover:bg-gray-300 transition-all duration-300 hover:shadow-xl">
+                            Download Resume
+                        </a>
                     @endif
                 </div>
             </div>
@@ -79,10 +67,10 @@
             <div class="flex-1 flex justify-center">
                 <div
                     class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden bg-white shadow-2xl flex items-center justify-center transform transition-transform hover:scale-105 duration-700 ease-in-out">
-                    @if (!empty($about->profile_image))
-                        <img src="{{ Storage::url($about->profile_image) }}" alt="Profile photo"
-                            class="w-full h-full object-cover">
-                    @else
+                    @if (!empty($about->profile_image_data) && !empty($about->profile_image_mime))
+                        <img src="data:{{ $about->profile_image_mime }};base64,{{ $about->profile_image_data }}"
+                            alt="Profile photo" class="w-full h-full object-cover">
+                        @else
                         <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
                             No Image Available
                         </div>
@@ -118,9 +106,11 @@
                         class="px-5 py-2 bg-blue-100 text-blue-800 rounded-full font-medium shadow-sm transform hover:scale-110 hover:bg-blue-200 transition-all duration-500 ease-in-out">
                         {{ $skill->name }}
                     </span>
-                    @if(!empty($skill->proficiency_level))
-                        <div class="hidden group-hover:block absolute left-1/2 top-full transform -translate-x-1/2 mt-3 z-10 pointer-events-none">
-                            <div class="px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg whitespace-nowrap">
+                    @if (!empty($skill->proficiency_level))
+                        <div
+                            class="hidden group-hover:block absolute left-1/2 top-full transform -translate-x-1/2 mt-3 z-10 pointer-events-none">
+                            <div
+                                class="px-3 py-2 bg-gray-900 text-white text-sm rounded-lg shadow-lg whitespace-nowrap">
                                 Proficiency: {{ $skill->proficiency_level }}
                             </div>
                         </div>
@@ -143,14 +133,14 @@
                         <div class="mt-4 flex flex-wrap gap-3">
                             @if ($project->repository_link)
                                 <a href="{{ $project->repository_link }}" target="_blank" rel="noopener noreferrer"
-                                   class="text-blue-600 inline-block hover:underline">
+                                    class="text-blue-600 inline-block hover:underline">
                                     View Github Repo
                                 </a>
                             @endif
 
                             @if ($project->link)
                                 <a href="{{ $project->link }}" target="_blank" rel="noopener noreferrer"
-                                   class="text-blue-600 inline-block hover:underline">
+                                    class="text-blue-600 inline-block hover:underline">
                                     View Project
                                 </a>
                             @endif
@@ -166,12 +156,12 @@
         <h2 class="text-3xl font-semibold mb-10 text-center text-gray-900">Contact Me</h2>
         <form action="{{ route('contact.submit') }}" method="POST" class="max-w-2xl mx-auto flex flex-col gap-4">
             @csrf
-            @if(session('success'))
+            @if (session('success'))
                 <div class="bg-green-100 text-green-800 px-4 py-3 rounded-lg text-sm">
                     {{ session('success') }}
                 </div>
             @endif
-            @if($errors->any())
+            @if ($errors->any())
                 <div class="bg-red-100 text-red-800 px-4 py-3 rounded-lg text-sm">
                     {{ $errors->first() }}
                 </div>

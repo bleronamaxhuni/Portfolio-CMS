@@ -10,11 +10,11 @@
           @click="triggerFileUpload"
           class="h-32 w-32 rounded-full border-2 border-dashed border-gray-400 flex items-center justify-center cursor-pointer hover:bg-gray-100 relative"
         >
-          <span v-if="!aboutMe.profile_image" class="text-gray-500 text-4xl">+</span>
+          <span v-if="!aboutMe.profile_image && !aboutMe.profile_image_data" class="text-gray-500 text-4xl">+</span>
 
           <img
             v-else
-            :src="imageSrc(aboutMe.profile_image)"
+            :src="imageSrc(aboutMe.profile_image, aboutMe.profile_image_data, aboutMe.profile_image_mime)"
             class="h-32 w-32 rounded-full object-cover"
           />
         </div>
@@ -66,11 +66,18 @@ export default {
       aboutMe: {
         bio: "",
         resume_link: "",
+        profile_image_data: "",
+        profile_image_mime: "",
       },
     };
   },
   methods: {
-    imageSrc(profileImage) {
+    imageSrc(profileImage, profileImageData, profileImageMime) {
+      // Preferred: DB-stored base64 (no dependency on filesystem storage).
+      if (profileImageData && profileImageMime) {
+        return `data:${profileImageMime};base64,${profileImageData}`;
+      }
+
       if (!profileImage) return "";
 
       // When the user selects a file we use an object URL.
@@ -84,11 +91,9 @@ export default {
         return profileImage;
       }
 
-      // Handle the most common Laravel storage formats.
       if (String(profileImage).startsWith("/storage/")) return profileImage;
       if (String(profileImage).startsWith("storage/")) return "/" + profileImage;
 
-      // Expected DB value is usually: "about/<filename>"
       return "/storage/" + profileImage;
     },
 
