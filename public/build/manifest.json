@@ -4,7 +4,7 @@
     "name": "_plugin-vue_export-helper"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CSrgd67G.css",
+    "file": "assets/app-BQZPi1bc.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -13,7 +13,7 @@
     ]
   },
   "resources/js/admin/admin.js": {
-    "file": "assets/admin-B2IdBaSf.js",
+    "file": "assets/admin-6aq1DpvO.js",
     "name": "admin",
     "src": "resources/js/admin/admin.js",
     "isEntry": true,

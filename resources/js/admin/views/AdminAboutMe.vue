@@ -14,11 +14,7 @@
 
           <img
             v-else
-            :src="
-              aboutMe.profile_image.startsWith('blob')
-                ? aboutMe.profile_image
-                : '/storage/' + aboutMe.profile_image
-            "
+            :src="imageSrc(aboutMe.profile_image)"
             class="h-32 w-32 rounded-full object-cover"
           />
         </div>
@@ -74,6 +70,28 @@ export default {
     };
   },
   methods: {
+    imageSrc(profileImage) {
+      if (!profileImage) return "";
+
+      // When the user selects a file we use an object URL.
+      if (String(profileImage).startsWith("blob")) return profileImage;
+
+      // If backend/DB already stored a full URL, don't prefix anything.
+      if (
+        String(profileImage).startsWith("http://") ||
+        String(profileImage).startsWith("https://")
+      ) {
+        return profileImage;
+      }
+
+      // Handle the most common Laravel storage formats.
+      if (String(profileImage).startsWith("/storage/")) return profileImage;
+      if (String(profileImage).startsWith("storage/")) return "/" + profileImage;
+
+      // Expected DB value is usually: "about/<filename>"
+      return "/storage/" + profileImage;
+    },
+
     async fetchAboutMe() {
       try {
         const res = await fetch("/admin/about-me", {
