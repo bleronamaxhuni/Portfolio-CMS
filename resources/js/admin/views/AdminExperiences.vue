@@ -28,7 +28,7 @@
                 {{ experience.title }} at {{ experience.company }}
               </h3>
               <p class="text-gray-600">
-                {{ experience.start_date }} - {{ experience.end_date || "Present" }}
+                {{ formatDateRange(experience) }}
               </p>
               <p class="text-gray-600 mt-2">{{ experience.description }}</p>
             </div>
@@ -99,11 +99,24 @@
           />
         </div>
         <div class="mb-4">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input
+              v-model="currentlyWorking"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+            />
+            <span class="text-gray-700">I currently work here</span>
+          </label>
+          <p class="mt-1 text-xs text-gray-500">Shows as &quot;Present&quot; on your portfolio instead of an end date.</p>
+        </div>
+
+        <div v-if="!currentlyWorking" class="mb-4">
           <label class="block text-gray-700 mb-2">End Date</label>
           <input
             v-model="form.end_date"
             type="date"
             class="w-full px-3 py-2 border rounded-lg"
+            :min="form.start_date || undefined"
           />
         </div>
         <div class="mb-4">
@@ -143,6 +156,7 @@ export default {
       isModalOpen: false,
       isEditMode: false,
       editingId: null,
+      currentlyWorking: false,
       form: {
         title: "",
         company: "",
@@ -152,6 +166,13 @@ export default {
         description: "",
       },
     };
+  },
+  watch: {
+    currentlyWorking(isCurrent) {
+      if (isCurrent) {
+        this.form.end_date = "";
+      }
+    },
   },
   methods: {
     async fetchExperiences() {
@@ -179,6 +200,7 @@ export default {
       this.isModalOpen = false;
     },
     resetForm() {
+      this.currentlyWorking = false;
       this.form = {
         title: "",
         company: "",
@@ -191,6 +213,7 @@ export default {
     editExperience(exp) {
       this.isEditMode = true;
       this.editingId = exp.id;
+      this.currentlyWorking = !exp.end_date;
       this.form = {
         title: exp.title || "",
         company: exp.company || "",
@@ -200,6 +223,18 @@ export default {
         description: exp.description || "",
       };
       this.isModalOpen = true;
+    },
+    formatDateRange(experience) {
+      const start = experience.start_date || "—";
+      const end = experience.end_date || "Present";
+      return `${start} – ${end}`;
+    },
+    experiencePayload() {
+      return {
+        ...this.form,
+        end_date: this.currentlyWorking ? null : this.form.end_date || null,
+        is_current: this.currentlyWorking,
+      };
     },
     async addExperience() {
       try {
@@ -214,7 +249,7 @@ export default {
             Accept: "application/json",
           },
           credentials: "same-origin",
-          body: JSON.stringify(this.form),
+          body: JSON.stringify(this.experiencePayload()),
         });
         if (res.ok) {
           const created = await res.json();
@@ -241,7 +276,7 @@ export default {
             Accept: "application/json",
           },
           credentials: "same-origin",
-          body: JSON.stringify(this.form),
+          body: JSON.stringify(this.experiencePayload()),
         });
         if (res.ok) {
           const updated = await res.json();

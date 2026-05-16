@@ -10,11 +10,11 @@
           @click="triggerFileUpload"
           class="h-32 w-32 rounded-full border-2 border-dashed border-gray-400 flex items-center justify-center cursor-pointer hover:bg-gray-100 relative"
         >
-          <span v-if="!aboutMe.profile_image_preview_url && !aboutMe.profile_image_data" class="text-gray-500 text-4xl">+</span>
+          <span v-if="!profilePreviewSrc" class="text-gray-500 text-4xl">+</span>
 
           <img
             v-else
-            :src="imageSrc(aboutMe.profile_image_data, aboutMe.profile_image_mime, aboutMe.profile_image_preview_url)"
+            :src="profilePreviewSrc"
             class="h-32 w-32 rounded-full object-cover"
           />
         </div>
@@ -73,16 +73,24 @@ export default {
       },
     };
   },
-  methods: {
-    imageSrc(profileImageData, profileImageMime, previewUrl) {
-      // Preferred: DB-stored base64.
-      if (profileImageData && profileImageMime) {
-        return `data:${profileImageMime};base64,${profileImageData}`;
+  computed: {
+    profilePreviewSrc() {
+      if (this.aboutMe.profile_image_preview_url) {
+        return this.aboutMe.profile_image_preview_url;
       }
-
-      // Fallback: object URL for immediate preview.
-      return previewUrl || "";
+      if (this.aboutMe.profile_img_url) {
+        return this.aboutMe.profile_img_url;
+      }
+      if (this.aboutMe.profile_image_data && this.aboutMe.profile_image_mime) {
+        return `data:${this.aboutMe.profile_image_mime};base64,${this.aboutMe.profile_image_data}`;
+      }
+      const path = this.aboutMe.profile_img || this.aboutMe.profile_image;
+      if (!path) return "";
+      if (/^(https?:|data:)/i.test(path)) return path;
+      return path.startsWith("/") ? path : `/storage/${path.replace(/^\//, "")}`;
     },
+  },
+  methods: {
 
     async fetchAboutMe() {
       try {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\AboutMe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AboutMeController extends Controller
 {
@@ -26,10 +27,7 @@ class AboutMeController extends Controller
         ]);
 
         if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-            $validated['profile_image_data'] = base64_encode(file_get_contents($file->getRealPath()));
-            $validated['profile_image_mime'] = $file->getMimeType();
-            $validated['profile_image'] = null;
+            $validated = array_merge($validated, $this->storeProfileImage($request));
         }
 
         $created = AboutMe::create($validated);
@@ -50,10 +48,8 @@ class AboutMeController extends Controller
         ]);
 
         if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-            $data['profile_image_data'] = base64_encode(file_get_contents($file->getRealPath()));
-            $data['profile_image_mime'] = $file->getMimeType();
-            $data['profile_image'] = null;
+            $this->deleteStoredProfileImage($aboutMe);
+            $data = array_merge($data, $this->storeProfileImage($request));
         }
 
         $aboutMe->update($data);
@@ -73,5 +69,28 @@ class AboutMeController extends Controller
         }
 
         return redirect()->route('admin.about-me.index')->with('success', 'About Me deleted.');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function storeProfileImage(Request $request): array
+    {
+        $file = $request->file('profile_image');
+        $path = $file->store('about', 'public');
+
+        return [
+            'profile_img' => $path,
+            'profile_image_data' => base64_encode(file_get_contents($file->getRealPath())),
+            'profile_image_mime' => $file->getMimeType(),
+            'profile_image' => null,
+        ];
+    }
+
+    private function deleteStoredProfileImage(AboutMe $aboutMe): void
+    {
+        if ($aboutMe->profile_img && ! str_starts_with($aboutMe->profile_img, 'http')) {
+            Storage::disk('public')->delete($aboutMe->profile_img);
+        }
     }
 }

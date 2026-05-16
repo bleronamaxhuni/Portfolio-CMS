@@ -5,8 +5,10 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Client\IndexController;
 use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Client\PortfolioController;
 
 Route::get('/', [IndexController::class,'index'])->name('home');
+Route::get('/api/portfolio', [PortfolioController::class, 'index'])->name('api.portfolio');
 
 
 // Authentication Routes
@@ -19,5 +21,5 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Contact Routes
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 Route::get('/contact', function () {
-    return redirect()->route('home') . '#contact';
+    return redirect()->to(route('home').'#contact');
 })->name('contact.page');

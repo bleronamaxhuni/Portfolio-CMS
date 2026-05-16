@@ -1,10 +1,10 @@
 {
-  "__plugin-vue_export-helper-BQ5-8BMs.js": {
-    "file": "assets/_plugin-vue_export-helper-BQ5-8BMs.js",
-    "name": "_plugin-vue_export-helper"
+  "_runtime-dom.esm-bundler-D0BIf-uA.js": {
+    "file": "assets/runtime-dom.esm-bundler-D0BIf-uA.js",
+    "name": "runtime-dom.esm-bundler"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BQZPi1bc.css",
+    "file": "assets/app-9Z-biq6n.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -13,21 +13,21 @@
     ]
   },
   "resources/js/admin/admin.js": {
-    "file": "assets/admin-6aq1DpvO.js",
+    "file": "assets/admin-bUxSLscU.js",
     "name": "admin",
     "src": "resources/js/admin/admin.js",
     "isEntry": true,
     "imports": [
-      "__plugin-vue_export-helper-BQ5-8BMs.js"
+      "_runtime-dom.esm-bundler-D0BIf-uA.js"
     ]
   },
-  "resources/js/app.js": {
-    "file": "assets/app-BSBy97CF.js",
-    "name": "app",
-    "src": "resources/js/app.js",
+  "resources/js/client/client.js": {
+    "file": "assets/client-CEWvUvp4.js",
+    "name": "client",
+    "src": "resources/js/client/client.js",
     "isEntry": true,
     "imports": [
-      "__plugin-vue_export-helper-BQ5-8BMs.js"
+      "_runtime-dom.esm-bundler-D0BIf-uA.js"
     ]
   }
 }

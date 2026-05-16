@@ -9,7 +9,7 @@
           <a href="/admin/skills" :class="{ 'bg-red-800': isActive('/admin/skills') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Skills</a>
           <a href="/admin/experiences" :class="{ 'bg-red-800': isActive('/admin/experiences') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Experiences</a>
           <a href="/admin/about-me" :class="{ 'bg-red-800': isActive('/admin/about-me') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">About Me</a>
-          <a href="#contact" :class="{ 'bg-red-800': isActive('#contact') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Contact Me</a>
+          <a href="/admin/messages" :class="{ 'bg-red-800': isActive('/admin/messages') }" class="block px-4 py-3 rounded-lg hover:bg-red-700 transition">Messages</a>
         </nav>
       </div>
 
@@ -34,9 +34,10 @@ import AdminProjects from './views/AdminProjects.vue'
 import AdminSkills from './views/AdminSkills.vue'
 import AdminExperiences from './views/AdminExperiences.vue'
 import AdminAboutMe from './views/AdminAboutMe.vue'
+import AdminMessages from './views/AdminMessages.vue'
 
 export default {
-  components: { AdminDashboard, AdminProjects, AdminSkills, AdminExperiences, AdminAboutMe },
+  components: { AdminDashboard, AdminProjects, AdminSkills, AdminExperiences, AdminAboutMe, AdminMessages },
   computed: {
     currentPath() { 
       return window.location.pathname
@@ -46,6 +47,7 @@ export default {
       if (this.currentPath.includes('/admin/skills')) return 'AdminSkills'
       if (this.currentPath.includes('/admin/experiences')) return 'AdminExperiences'
       if (this.currentPath.includes('/admin/about-me')) return 'AdminAboutMe'
+      if (this.currentPath.includes('/admin/messages')) return 'AdminMessages'
       return 'AdminDashboard'
     }
   },

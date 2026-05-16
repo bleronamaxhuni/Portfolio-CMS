@@ -22,10 +22,13 @@ class ExperienceController extends Controller
             'title' => 'required|string|max:255',
             'company' => 'required|string|max:255',
             'start_date' => 'required|date',
-            'end_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'is_current' => 'sometimes|boolean',
             'description' => 'nullable|string',
             'location' => 'nullable|string|max:255',
         ]);
+
+        $validated = $this->normalizeExperienceDates($validated, $request);
 
         $created = Experience::create($validated);
 
@@ -44,10 +47,13 @@ class ExperienceController extends Controller
             'title' => 'sometimes|required|string|max:255',
             'company' => 'sometimes|required|string|max:255',
             'start_date' => 'sometimes|required|date',
-            'end_date' => 'sometimes|nullable|date',
+            'end_date' => 'sometimes|nullable|date|after_or_equal:start_date',
+            'is_current' => 'sometimes|boolean',
             'description' => 'sometimes|nullable|string',
             'location' => 'sometimes|nullable|string|max:255',
         ]);
+
+        $data = $this->normalizeExperienceDates($data, $request);
 
         $experience->update($data);
 
@@ -68,5 +74,20 @@ class ExperienceController extends Controller
         }
 
         return redirect()->route('admin.experiences.index')->with('success', 'Experience deleted.');
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     * @return array<string, mixed>
+     */
+    private function normalizeExperienceDates(array $validated, Request $request): array
+    {
+        if ($request->boolean('is_current')) {
+            $validated['end_date'] = null;
+        }
+
+        unset($validated['is_current']);
+
+        return $validated;
     }
 }

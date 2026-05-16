@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ContactMessageMail;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Admin\Message;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -18,32 +20,69 @@ class ContactController extends Controller
             'message' => ['required', 'string', 'max:2000'],
         ]);
 
-        $recipient = env('CONTACT_TO_ADDRESS');
+        $stored = Message::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'subject' => 'Portfolio contact',
+            'message' => $validated['message'],
+            'is_read' => false,
+        ]);
+
+        $this->sendNotificationEmail($stored, $validated['name'], $validated['email'], $validated['message']);
+
+        return $this->respond(
+            $request,
+            true,
+            'Thanks! Your message has been sent.'
+        );
+    }
+
+    private function sendNotificationEmail(Message $stored, string $name, string $email, string $body): void
+    {
+        $recipient = config('portfolio.contact_to');
+
         if (empty($recipient)) {
-            // Fallback to the first admin user's email (so the form works without extra env setup).
-            $recipient = User::query()->where('is_admin', true)->value('email') ?: env('MAIL_FROM_ADDRESS');
+            $recipient = User::query()->where('is_admin', true)->value('email');
         }
+
         if (empty($recipient)) {
-            return back()->withErrors([
-                'contact' => 'Contact recipient is not configured. Please set CONTACT_TO_ADDRESS in your .env file.',
-            ]);
+            $recipient = config('mail.from.address');
+        }
+
+        if (empty($recipient)) {
+            Log::warning('Contact form saved but no recipient email is configured.');
+
+            return;
         }
 
         try {
-            Mail::to($recipient)->send(new ContactMessageMail(
-                $validated['name'],
-                $validated['email'],
-                $validated['message'],
-            ));
+            Mail::to($recipient)->send(new ContactMessageMail($name, $email, $body));
         } catch (\Throwable $e) {
             report($e);
-
-            return back()->withErrors([
-                'contact' => 'Unable to send your message right now. Please try again later.',
+            Log::error('Contact form email failed', [
+                'message_id' => $stored->id,
+                'error' => $e->getMessage(),
             ]);
         }
+    }
 
-        return back()->with('success', 'Thanks! Your message has been sent.');
+    private function respond(Request $request, bool $success, string $message, array $errors = [])
+    {
+        if ($request->expectsJson()) {
+            if (! $success) {
+                return response()->json([
+                    'message' => $message,
+                    'errors' => $errors,
+                ], 422);
+            }
+
+            return response()->json(['message' => $message]);
+        }
+
+        if (! $success) {
+            return back()->withErrors($errors ?: ['contact' => $message]);
+        }
+
+        return back()->with('success', $message);
     }
 }
-

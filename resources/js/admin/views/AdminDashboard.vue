@@ -50,11 +50,17 @@
       </div>
 
       <!-- Messages Card -->
-      <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600 hover:shadow-lg transition">
+      <div
+        class="bg-white rounded-lg shadow-md p-6 border-l-4 border-red-600 hover:shadow-lg transition cursor-pointer"
+        role="button"
+        tabindex="0"
+        @click="goToMessages"
+        @keyup.enter="goToMessages"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-gray-600 text-sm">Messages</p>
-            <p class="text-3xl font-bold text-red-600">0</p>
+            <p class="text-3xl font-bold text-red-600">{{ stats.messages }}</p>
           </div>
           <svg class="w-12 h-12 text-red-200" fill="currentColor" viewBox="0 0 20 20">
             <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5z"></path>
@@ -95,6 +101,9 @@ export default {
     };
   },
   methods: {
+    goToMessages() {
+      window.location.href = '/admin/messages'
+    },
     async fetchStats() {
       try {
         const res = await fetch("/admin/dashboard", {
