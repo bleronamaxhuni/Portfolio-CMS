@@ -21,6 +21,16 @@
       "_runtime-dom.esm-bundler-HeGSMANJ.js"
     ]
   },
+  "resources/js/app.js": {
+    "file": "assets/app-Bvkvl7gB.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/client/client.js",
+      "_runtime-dom.esm-bundler-HeGSMANJ.js"
+    ]
+  },
   "resources/js/client/client.js": {
     "file": "assets/client-3L4I6M6u.js",
     "name": "client",
