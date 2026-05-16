@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Mail\ContactMessageMail;
+use App\Jobs\SendContactNotification;
 use App\Models\Admin\Message;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -28,42 +25,13 @@ class ContactController extends Controller
             'is_read' => false,
         ]);
 
-        $this->sendNotificationEmail($stored, $validated['name'], $validated['email'], $validated['message']);
+        SendContactNotification::dispatch($stored->id);
 
         return $this->respond(
             $request,
             true,
             'Thanks! Your message has been sent.'
         );
-    }
-
-    private function sendNotificationEmail(Message $stored, string $name, string $email, string $body): void
-    {
-        $recipient = config('portfolio.contact_to');
-
-        if (empty($recipient)) {
-            $recipient = User::query()->where('is_admin', true)->value('email');
-        }
-
-        if (empty($recipient)) {
-            $recipient = config('mail.from.address');
-        }
-
-        if (empty($recipient)) {
-            Log::warning('Contact form saved but no recipient email is configured.');
-
-            return;
-        }
-
-        try {
-            Mail::to($recipient)->send(new ContactMessageMail($name, $email, $body));
-        } catch (\Throwable $e) {
-            report($e);
-            Log::error('Contact form email failed', [
-                'message_id' => $stored->id,
-                'error' => $e->getMessage(),
-            ]);
-        }
     }
 
     private function respond(Request $request, bool $success, string $message, array $errors = [])
