@@ -1,0 +1,9 @@
+[variables]
+NIXPACKS_PHP_ROOT_DIR = "public"
+
+[phases.build]
+cmds = [
+  "npm ci --include=dev",
+  "npm run build",
+  "rm -f public/hot",
+]
