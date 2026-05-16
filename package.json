@@ -16,6 +16,10 @@
     },
     "dependencies": {
         "@vitejs/plugin-vue": "^6.0.2",
-        "vue": "^3.5.25"
+        "vue": "^3.5.25",
+        "vuedraggable": "^2.24.3"
+    },
+    "engines": {
+        "node": "18.x"
     }
 }

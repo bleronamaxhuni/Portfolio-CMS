@@ -1,10 +1,10 @@
 {
-  "_runtime-dom.esm-bundler-D0BIf-uA.js": {
-    "file": "assets/runtime-dom.esm-bundler-D0BIf-uA.js",
+  "_runtime-dom.esm-bundler-HeGSMANJ.js": {
+    "file": "assets/runtime-dom.esm-bundler-HeGSMANJ.js",
     "name": "runtime-dom.esm-bundler"
   },
   "resources/css/app.css": {
-    "file": "assets/app-9Z-biq6n.css",
+    "file": "assets/app-C7LTmTSC.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -13,21 +13,21 @@
     ]
   },
   "resources/js/admin/admin.js": {
-    "file": "assets/admin-bUxSLscU.js",
+    "file": "assets/admin-7kZNKDFD.js",
     "name": "admin",
     "src": "resources/js/admin/admin.js",
     "isEntry": true,
     "imports": [
-      "_runtime-dom.esm-bundler-D0BIf-uA.js"
+      "_runtime-dom.esm-bundler-HeGSMANJ.js"
     ]
   },
   "resources/js/client/client.js": {
-    "file": "assets/client-CEWvUvp4.js",
+    "file": "assets/client-3L4I6M6u.js",
     "name": "client",
     "src": "resources/js/client/client.js",
     "isEntry": true,
     "imports": [
-      "_runtime-dom.esm-bundler-D0BIf-uA.js"
+      "_runtime-dom.esm-bundler-HeGSMANJ.js"
     ]
   }
 }
