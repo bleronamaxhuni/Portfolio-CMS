@@ -4,14 +4,22 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Experience;
+use App\Traits\ReordersItems;
 use Illuminate\Http\Request;
 
 class ExperienceController extends Controller
 {
+    use ReordersItems;
+
+    protected function reorderModel(): string
+    {
+        return Experience::class;
+    }
+
     public function index()
     {
         if (request()->wantsJson()) {
-            return response()->json(Experience::all());
+            return response()->json(Experience::query()->orderBy('sort_order')->get());
         }
         return view('admin.experiences');
     }
@@ -29,6 +37,7 @@ class ExperienceController extends Controller
         ]);
 
         $validated = $this->normalizeExperienceDates($validated, $request);
+        $validated['sort_order'] = (Experience::max('sort_order') ?? -1) + 1;
 
         $created = Experience::create($validated);
 

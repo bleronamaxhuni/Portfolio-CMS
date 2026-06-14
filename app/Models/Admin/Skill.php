@@ -12,5 +12,6 @@ class Skill extends Model
         'name',
         'proficiency_level',
         'icon',
+        'sort_order',
     ];
 }

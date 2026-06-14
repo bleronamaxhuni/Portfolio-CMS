@@ -10,6 +10,9 @@ use App\Http\Controllers\Admin\MessageController;
 
 Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::patch('/admin/projects/reorder', [ProjectController::class, 'reorder']);
+    Route::patch('/admin/skills/reorder', [SkillController::class, 'reorder']);
+    Route::patch('/admin/experiences/reorder', [ExperienceController::class, 'reorder']);
     Route::resource('/admin/projects', ProjectController::class);
     Route::resource('/admin/skills', SkillController::class);
     Route::resource('/admin/experiences', ExperienceController::class);

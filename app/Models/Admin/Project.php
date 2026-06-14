@@ -16,5 +16,6 @@ class Project extends Model
         'image',
         'category',
         'status',
+        'sort_order',
     ];
 }

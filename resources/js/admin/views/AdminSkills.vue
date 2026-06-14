@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="bg-white rounded-lg shadow-md p-6 mb-8 border-t-4 border-red-600">
     <h1 class="text-3xl font-bold text-gray-800 mb-2">Manage Skills</h1>
-    <p class="text-gray-600">Add, edit, or remove your skills here.</p>
+    <p class="text-gray-600">Add, edit, remove, or drag to reorder your skills.</p>
   </div>
 
   <!-- Skills Management Section -->
@@ -11,6 +11,7 @@
     <table class="w-full table-auto mb-6">
       <thead>
         <tr>
+          <th class="px-4 py-2 border-b-2 border-gray-200 w-10"></th>
           <th class="px-4 py-2 border-b-2 border-gray-200 text-left">Skill Name</th>
           <th class="px-4 py-2 border-b-2 border-gray-200 text-left">
             Proficiency Level
@@ -18,43 +19,40 @@
           <th class="px-4 py-2 border-b-2 border-gray-200 text-left">Actions</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="skill in skills.data" :key="skill.id">
-          <td class="px-4 py-2 border-b border-gray-200">{{ skill.name }}</td>
-          <td class="px-4 py-2 border-b border-gray-200">
-            {{ skill.proficiency_level }}
-          </td>
-          <td class="px-4 py-2 border-b border-gray-200">
-            <button
-              @click="openEditModal(skill)"
-              class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition mr-2"
-            >
-              Edit
-            </button>
-            <button
-              @click="deleteSkill(skill.id)"
-              class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      </tbody>
+      <draggable
+        v-model="skills"
+        tag="tbody"
+        item-key="id"
+        handle=".drag-handle"
+        @end="saveOrder"
+      >
+        <template #item="{ element: skill }">
+          <tr>
+            <td class="px-4 py-2 border-b border-gray-200">
+              <span class="drag-handle cursor-grab text-gray-400 hover:text-gray-600 select-none" title="Drag to reorder">⠿</span>
+            </td>
+            <td class="px-4 py-2 border-b border-gray-200">{{ skill.name }}</td>
+            <td class="px-4 py-2 border-b border-gray-200">
+              {{ skill.proficiency_level }}
+            </td>
+            <td class="px-4 py-2 border-b border-gray-200">
+              <button
+                @click="openEditModal(skill)"
+                class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition mr-2"
+              >
+                Edit
+              </button>
+              <button
+                @click="deleteSkill(skill.id)"
+                class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </template>
+      </draggable>
     </table>
-
-    <!-- Pagination -->
-    <div class="flex justify-center gap-4 mb-4">
-      <button @click="fetchSkills(skills.prev_page_url)" 
-              :disabled="!skills.prev_page_url"
-              class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 disabled:opacity-50 font-bold">
-        &lt;
-      </button>
-      <button @click="fetchSkills(skills.next_page_url)" 
-              :disabled="!skills.next_page_url"
-              class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 disabled:opacity-50 font-bold">
-        &gt;
-      </button>
-    </div>
 
     <button
       @click="openModal"
@@ -175,21 +173,17 @@
 </template>
 
 <script>
-import draggable
- from 'vuedraggable';
+import draggable from "vuedraggable";
+
 export default {
   name: "AdminSkills",
+  components: { draggable },
   data() {
     return {
       isModalOpen: false,
       isEditModalOpen: false,
       editingSkillId: null,
-      skills: {
-        data: [],
-        current_page: 1,
-        next_page_url: null,
-        prev_page_url: null,
-      },
+      skills: [],
       newSkill: {
         name: "",
         proficiency_level: "",
@@ -198,9 +192,9 @@ export default {
     };
   },
   methods: {
-    async fetchSkills(url="/admin/skills") {
+    async fetchSkills() {
       try {
-        const response = await fetch(url, {
+        const response = await fetch("/admin/skills", {
           headers: {
             Accept: "application/json",
           },
@@ -212,6 +206,29 @@ export default {
         this.skills = await response.json();
       } catch (error) {
         console.error("Error fetching skills:", error);
+      }
+    },
+    async saveOrder() {
+      try {
+        const token = document
+          .querySelector('meta[name="csrf-token"]')
+          ?.getAttribute("content");
+        const response = await fetch("/admin/skills/reorder", {
+          method: "PATCH",
+          headers: {
+            "X-CSRF-TOKEN": token,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          credentials: "same-origin",
+          body: JSON.stringify({ order: this.skills.map((s) => s.id) }),
+        });
+        if (!response.ok) {
+          throw new Error("Failed to save order");
+        }
+      } catch (error) {
+        console.error("Error saving skill order:", error);
+        await this.fetchSkills();
       }
     },
     openModal() {
@@ -243,7 +260,7 @@ export default {
           throw new Error("Network response was not ok");
         }
         const createdSkill = await response.json();
-        this.skills.data.unshift(createdSkill);
+        this.skills.push(createdSkill);
         this.closeModal();
         this.resetForm();
       } catch (error) {
@@ -278,9 +295,9 @@ export default {
           throw new Error("Network response was not ok");
         }
         const updatedSkill = await response.json();
-        const index = this.skills.data.findIndex((s) => s.id === updatedSkill.id);
+        const index = this.skills.findIndex((s) => s.id === updatedSkill.id);
         if (index !== -1) {
-          this.skills.data.splice(index, 1, updatedSkill);
+          this.skills.splice(index, 1, updatedSkill);
         }
         this.closeEditModal();
       } catch (error) {
@@ -305,7 +322,7 @@ export default {
         });
         if (response.ok) {
           window.alert("Skill deleted successfully.");
-          await this.fetchSkills();
+          this.skills = this.skills.filter((s) => s.id !== skillId);
         }
         if (!response.ok) {
           window.alert("Failed to delete skill.");

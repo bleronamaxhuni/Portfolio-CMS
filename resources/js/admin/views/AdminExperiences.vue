@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-8 border-t-4 border-red-600">
       <h1 class="text-3xl font-bold text-gray-800 mb-2">Manage Experiences</h1>
-      <p class="text-gray-600">Add, edit, or delete your professional experiences</p>
+      <p class="text-gray-600">Add, edit, delete, or drag to reorder your professional experiences</p>
     </div>
 
     <!-- Experiences List -->
@@ -20,35 +20,48 @@
       <div v-if="experiences.length === 0" class="text-gray-600">
         No experiences found.
       </div>
-      <ul v-else class="space-y-4">
-        <li v-for="experience in experiences" :key="experience.id" class="border-b pb-4">
-          <div class="flex justify-between items-center">
-            <div>
-              <h3 class="text-lg font-bold text-gray-800">
-                {{ experience.title }} at {{ experience.company }}
-              </h3>
-              <p class="text-gray-600">
-                {{ formatDateRange(experience) }}
-              </p>
-              <p class="text-gray-600 mt-2">{{ experience.description }}</p>
+      <draggable
+        v-else
+        v-model="experiences"
+        tag="ul"
+        item-key="id"
+        handle=".drag-handle"
+        class="space-y-4"
+        @end="saveOrder"
+      >
+        <template #item="{ element: experience }">
+          <li class="border-b pb-4">
+            <div class="flex justify-between items-center">
+              <div class="flex items-start gap-3">
+                <span class="drag-handle cursor-grab text-gray-400 hover:text-gray-600 select-none mt-1" title="Drag to reorder">⠿</span>
+                <div>
+                  <h3 class="text-lg font-bold text-gray-800">
+                    {{ experience.title }} at {{ experience.company }}
+                  </h3>
+                  <p class="text-gray-600">
+                    {{ formatDateRange(experience) }}
+                  </p>
+                  <p class="text-gray-600 mt-2">{{ experience.description }}</p>
+                </div>
+              </div>
+              <div class="space-x-2">
+                <button
+                  @click="editExperience(experience)"
+                  class="px-3 py-1 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
+                >
+                  Edit
+                </button>
+                <button
+                  @click="deleteExperience(experience.id)"
+                  class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-            <div class="space-x-2">
-              <button
-                @click="editExperience(experience)"
-                class="px-3 py-1 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
-              >
-                Edit
-              </button>
-              <button
-                @click="deleteExperience(experience.id)"
-                class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </template>
+      </draggable>
     </div>
 
     <!-- Add/Edit Experience Modal -->
@@ -148,8 +161,11 @@
 </template>
 
 <script>
+import draggable from "vuedraggable";
+
 export default {
   name: "AdminExperiences",
+  components: { draggable },
   data() {
     return {
       experiences: [],
@@ -188,6 +204,29 @@ export default {
         }
       } catch (e) {
         console.error(e);
+      }
+    },
+    async saveOrder() {
+      try {
+        const token = document
+          .querySelector('meta[name="csrf-token"]')
+          ?.getAttribute("content");
+        const res = await fetch("/admin/experiences/reorder", {
+          method: "PATCH",
+          headers: {
+            "X-CSRF-TOKEN": token,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          credentials: "same-origin",
+          body: JSON.stringify({ order: this.experiences.map((e) => e.id) }),
+        });
+        if (!res.ok) {
+          throw new Error("Failed to save order");
+        }
+      } catch (e) {
+        console.error("Error saving experience order:", e);
+        await this.fetchExperiences();
       }
     },
     openModal() {
@@ -253,7 +292,7 @@ export default {
         });
         if (res.ok) {
           const created = await res.json();
-          this.experiences.unshift(created);
+          this.experiences.push(created);
           this.closeModal();
         } else {
           console.error("Failed to create experience", res.status);

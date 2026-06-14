@@ -14,9 +14,9 @@ class PortfolioController extends Controller
     {
         return response()->json([
             'about' => AboutMe::query()->first(),
-            'experiences' => Experience::query()->orderByDesc('start_date')->get(),
-            'skills' => Skill::query()->orderBy('id')->get(),
-            'projects' => Project::query()->orderByDesc('created_at')->get(),
+            'experiences' => Experience::query()->orderBy('sort_order')->get(),
+            'skills' => Skill::query()->orderBy('sort_order')->get(),
+            'projects' => Project::query()->orderBy('sort_order')->get(),
         ]);
     }
 }

@@ -4,15 +4,22 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Skill;
+use App\Traits\ReordersItems;
 use Illuminate\Http\Request;
 
 class SkillController extends Controller
 {
+    use ReordersItems;
+
+    protected function reorderModel(): string
+    {
+        return Skill::class;
+    }
+
     public function index()
     {
         if (request()->wantsJson()) {
-            $skills = Skill::paginate(5);
-            return response()->json($skills);
+            return response()->json(Skill::query()->orderBy('sort_order')->get());
         }
         return view('admin.skills');
     }
@@ -24,6 +31,8 @@ class SkillController extends Controller
             'proficiency_level' => 'required|string|max:256',
             'icon' => 'nullable|string|max:255',
         ]);
+
+        $validated['sort_order'] = (Skill::max('sort_order') ?? -1) + 1;
 
         $skill = Skill::create($validated);
 

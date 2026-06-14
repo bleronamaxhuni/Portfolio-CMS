@@ -15,5 +15,6 @@ class Experience extends Model
         'end_date',
         'description',
         'location',
+        'sort_order',
     ];
 }

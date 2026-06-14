@@ -4,15 +4,22 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Project;
+use App\Traits\ReordersItems;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
+    use ReordersItems;
+
+    protected function reorderModel(): string
+    {
+        return Project::class;
+    }
     
     public function index()
     {
         if (request()->wantsJson()) {
-            return response()->json(Project::all());
+            return response()->json(Project::query()->orderBy('sort_order')->get());
         }
         return view('admin.projects');
     }
@@ -28,6 +35,8 @@ class ProjectController extends Controller
             'category' => 'required|string|max:100',
             'status' => 'required|in:ongoing,completed,paused',
         ]);
+
+        $validated['sort_order'] = (Project::max('sort_order') ?? -1) + 1;
 
         $project = Project::create($validated);
 

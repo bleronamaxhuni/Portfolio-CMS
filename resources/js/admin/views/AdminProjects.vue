@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="bg-white rounded-lg shadow-md p-6 mb-8 border-t-4 border-red-600">
       <h1 class="text-3xl font-bold text-gray-800 mb-2">Projects</h1>
-      <p class="text-gray-600">Manage your portfolio projects</p>
+      <p class="text-gray-600">Manage your portfolio projects. Drag rows to change display order.</p>
     </div>
 
     <!-- Projects Table -->
@@ -15,6 +15,7 @@
       <table class="w-full">
         <thead class="bg-gray-50">
           <tr>
+            <th class="px-6 py-3 w-10"></th>
             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Title</th>
             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Category</th>
@@ -22,11 +23,18 @@
             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
           </tr>
         </thead>
-          <tbody>
-              <tr v-if="projects.length === 0" class="text-center">
-                <td colspan="5" class="px-6 py-8 text-gray-500">No projects found.</td>
-              </tr>
-            <tr v-for="project in projects" :key="project.id" class="border-b border-gray-200 hover:bg-gray-50">
+        <draggable
+          v-model="projects"
+          tag="tbody"
+          item-key="id"
+          handle=".drag-handle"
+          @end="saveOrder"
+        >
+          <template #item="{ element: project }">
+            <tr class="border-b border-gray-200 hover:bg-gray-50">
+              <td class="px-6 py-4">
+                <span class="drag-handle cursor-grab text-gray-400 hover:text-gray-600 select-none" title="Drag to reorder">⠿</span>
+              </td>
               <td class="px-6 py-4 text-gray-800">{{ project.title }}</td>
               <td class="px-6 py-4 text-gray-600">{{ project.description }}</td>
               <td class="px-6 py-4 text-gray-600">{{ project.category }}</td>
@@ -44,7 +52,13 @@
                 </div>
               </td>
             </tr>
-          </tbody>
+          </template>
+        </draggable>
+        <tbody v-if="projects.length === 0">
+          <tr class="text-center">
+            <td colspan="6" class="px-6 py-8 text-gray-500">No projects found.</td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
@@ -170,8 +184,11 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
+
 export default {
   name: 'AdminProjects',
+  components: { draggable },
   data() {
     return {
       isModalOpen: false,
@@ -203,6 +220,27 @@ export default {
         }
       } catch (e) {
         console.error(e)
+      }
+    },
+    async saveOrder() {
+      try {
+        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        const res = await fetch('/admin/projects/reorder', {
+          method: 'PATCH',
+          headers: {
+            'X-CSRF-TOKEN': token,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({ order: this.projects.map((p) => p.id) }),
+        })
+        if (!res.ok) {
+          throw new Error('Failed to save order')
+        }
+      } catch (e) {
+        console.error('Error saving project order:', e)
+        await this.fetchProjects()
       }
     },
     openModal() {
@@ -237,8 +275,9 @@ export default {
         })
 
         if (response.ok) {
+          const created = await response.json()
+          this.projects.push(created)
           this.closeModal()
-          await this.fetchProjects()
         } else {
           console.error('Failed to create project')
         }
@@ -282,8 +321,10 @@ export default {
         })
 
         if (response.ok) {
+          const updated = await response.json()
+          const idx = this.projects.findIndex((p) => p.id === updated.id)
+          if (idx !== -1) this.projects.splice(idx, 1, updated)
           this.closeEditModal()
-          await this.fetchProjects()
         } else {
           console.error('Failed to update project')
         }
@@ -309,7 +350,7 @@ export default {
         
         if (res.ok) {
           window.alert('Project deleted successfully.')
-          await this.fetchProjects()
+          this.projects = this.projects.filter((p) => p.id !== id)
         } else {
           console.error('Failed to delete project', res.status)
           window.alert('Failed to delete project.')
